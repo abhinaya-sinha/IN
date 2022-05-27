@@ -317,8 +317,6 @@ class CSVData(Data):
             Z = csv_file[self.spectators_name]
         if self.fpl:
             self.fpl.closeFile( in_file_name )
-        else:
-            csv_file.close()
         if self.spectators_name is not None:
             return X,Y,Z
         else:

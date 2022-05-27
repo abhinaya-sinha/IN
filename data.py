@@ -1,11 +1,13 @@
 ### Data class and associated helper methods
 
 import numpy as np
+import pandas as pd
 import h5py
 import os
 import time
 from threading import Thread
 import itertools
+import torch
 
 class FilePreloader(Thread):
     def __init__(self, files_list, file_open,n_ahead=2):
@@ -47,6 +49,7 @@ def data_class_getter(name):
     """Returns the specified Data class"""
     data_dict = {
             "H5Data":H5Data,
+            "CSVData": CSVData
             }
     try:
         return data_dict[name]
@@ -283,6 +286,43 @@ class H5Data(Data):
                 num_data += len(X)
             h5_file.close()
         return num_data
+
+    def finalize(self):
+        if self.fpl:
+            self.fpl.stop()
+
+class CSVData(Data):
+
+    def __init__(self, batch_size, cache=None, preloading=0, features_name='features', labels_name='labels', spectators_name = None):
+        """Initializes and stores names of feature and label datasets"""
+        super(CSVData, self).__init__(batch_size,cache,(spectators_name is not None))
+        self.features_name = features_name
+        self.labels_name = labels_name        
+        self.spectators_name = spectators_name
+        ## initialize the data-preloader
+        self.fpl = None
+        if preloading:
+            self.fpl = FilePreloader( [] , file_open = lambda n : pd.read_csv(n), n_ahead=preloading)
+            self.fpl.start()          
+    def load_data(self, in_file_name):
+        """Loads pandas dataframes from csv file.
+        """
+        if self.fpl:
+            csv_file = self.fpl.getFile( in_file_name )
+        else:
+            csv_file = pd.read_csv(in_file_name)
+        X = csv_file[self.features_name]
+        Y = csv_file[self.labels_name]
+        if self.spectators_name is not None:
+            Z = csv_file[self.spectators_name]
+        if self.fpl:
+            self.fpl.closeFile( in_file_name )
+        else:
+            csv_file.close()
+        if self.spectators_name is not None:
+            return X,Y,Z
+        else:
+            return X,Y
 
     def finalize(self):
         if self.fpl:

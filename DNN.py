@@ -2,12 +2,11 @@ import torch
 import torch.nn as nn
 
 class DNN(nn.Module):
-    def __init__(self, layers = 3, activation = nn.LeakyReLU(), X_mean = 0, X_std = 1, device = 'cpu'):
-        super(DNN, self).__init__()
-        self.layers = layers
+    def __init__(self, Layers=[25, 8], activation = nn.LeakyReLU(), X_mean = 0, X_std = 1, device = 'cpu'):
+        super().__init__()
+        self.Layers = Layers
         self.activation = activation
         self.device = device
-        self.layers = layers
         self.activation = activation
         self.device = device
         self.Model = self.build_model().to(device)
@@ -16,8 +15,8 @@ class DNN(nn.Module):
 
     def build_model(self):
         net = nn.Sequential()
-        for ii in range(len(self.layers-2)):
-            this_module = nn.Linear(self.Layers[ii], self.layers[ii+1])
+        for ii in range(len(self.Layers)-2):
+            this_module = nn.Linear(self.Layers[ii], self.Layers[ii+1])
             nn.init.xavier_normal_(this_module.weight)
             net.add_module("Linear" + str(ii), this_module)
             net.add_module("Activation" + str(ii), self.activation)

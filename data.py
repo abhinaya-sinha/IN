@@ -208,7 +208,7 @@ class Data(object):
         if self.is_numpy_array(data):
             return len(data)
         else:
-            return len(data[0])
+            return len(data)
 
     def load_data(self, in_file):
         """Input: name of file from which the data should be loaded
@@ -293,32 +293,33 @@ class H5Data(Data):
 
 class CSVData(Data):
 
-    def __init__(self, batch_size, cache=None, preloading=0, features_name='features', labels_name='labels', spectators_name = None):
+    def __init__(self, batch_size, cache=None, preloading=False, features_name='features', labels_name='labels', spectators_name = None, file_names=[]):
         """Initializes and stores names of feature and label datasets"""
         super(CSVData, self).__init__(batch_size,cache,(spectators_name is not None))
         self.features_name = features_name
         self.labels_name = labels_name        
         self.spectators_name = spectators_name
+        self.file_names = file_names
         ## initialize the data-preloader
         self.fpl = None
         if preloading:
-            self.fpl = FilePreloader( [] , file_open = lambda n : pd.read_csv(n), n_ahead=preloading)
+            self.fpl = FilePreloader( file_names, file_open = lambda n :self.load_data(n), n_ahead=preloading)
             self.fpl.start()          
     def load_data(self, in_file_name):
-        """Loads pandas dataframes from csv file.
+        """Loads numpy arrays (or list of numpy arrays) from csv file.
         """
         if self.fpl:
             csv_file = self.fpl.getFile( in_file_name )
         else:
             csv_file = pd.read_csv(in_file_name)
-        X = csv_file[self.features_name]
-        Y = csv_file[self.labels_name]
+        X = csv_file[self.features_name].to_numpy()
+        Y = csv_file[self.labels_name].to_numpy()
         if self.spectators_name is not None:
-            Z = csv_file[self.spectators_name]
+            Z = csv_file[self.spectators_name].to_numpy()
         if self.fpl:
             self.fpl.closeFile( in_file_name )
         if self.spectators_name is not None:
-            return X,Y,Z
+            return X,Y, Z
         else:
             return X,Y
 

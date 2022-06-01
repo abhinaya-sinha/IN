@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from torch.utils.data import Dataset
 import torch.optim as optim
 from DNN import DNN
-import data
 from data import CSVData
 from sklearn.model_selection import train_test_split
 
@@ -77,7 +76,7 @@ if __name__ == "__main__":
     VLQData = CSVData(batch_size=1024, features_name=features, labels_name=label, file_names=['./train_'+str(i)+'.csv' for i in range(0,10)])
 
     net = DNN().build_model()
-    optimizer = optim.Adam(net.parameters(), lr=0.001)
+    optimizer = optim.Adam(net.parameters(), lr=0.01)
     epochs =300
 
     losses, test_losses = train_model.train(train_data=VLQData, net = net, optimizer=optimizer, epochs=epochs)

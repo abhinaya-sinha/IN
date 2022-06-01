@@ -3,6 +3,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
+from torch.utils.data import Dataset
 import torch.optim as optim
 import DNN
 import data

@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     losses, test_losses = train_model.train(train_data=VLQData, net = net, optimizer=optimizer, epochs=epochs)
 
-
+    torch.save(net, 'first_model.pt')
 
     plt.plot(np.linspace(0, epochs, epochs), losses, label = 'train loss')
     plt.yscale('log')

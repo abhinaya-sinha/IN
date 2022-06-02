@@ -89,7 +89,7 @@ if __name__ == "__main__":
     ax = fig.add_subplot(1,1,1)
     ax.plot(np.linspace(0, epochs, epochs), losses, label = 'train loss')
     ax.plot(np.linspace(0,epochs, epochs), test_losses, label = 'test loss')
-    ax.yscale('log')
+    plt.yscale('log')
     ax.legend()
     plt.show(block=True)
 

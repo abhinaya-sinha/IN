@@ -7,7 +7,6 @@ from torch.utils.data import Dataset
 import torch.optim as optim
 from DNN import DNN
 from data import CSVData
-from sklearn.preprocessing import normalize
 from sklearn.model_selection import train_test_split
 
 class train_model:
@@ -24,9 +23,9 @@ class train_model:
             for i, batch in enumerate(train_data.generate_data()):
                 X_0, Y_0 = batch
                 X, X_test, Y, Y_test = train_test_split(X_0, Y_0, test_size=0.33)
-                inputs = torch.Tensor(normalize(X))
+                inputs = torch.Tensor(X)
                 labels = torch.Tensor(Y)
-                test_inputs = torch.Tensor(normalize(X_test))
+                test_inputs = torch.Tensor(X_test)
                 test_labels = torch.Tensor(Y_test)
                 del X, Y, X_test, Y_test, X_0, Y_0
                 outputs =net(inputs)
@@ -78,7 +77,7 @@ if __name__ == "__main__":
 
     net = DNN(device = 'cuda').build_model()
     optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=0.01)
-    epochs =300
+    epochs =10
 
     losses, test_losses = train_model.train(train_data=VLQData, net = net, optimizer=optimizer, epochs=epochs)
 

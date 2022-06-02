@@ -91,6 +91,5 @@ if __name__ == "__main__":
     ax.plot(np.linspace(0,epochs, epochs), test_losses, label = 'test loss')
     plt.yscale('log')
     ax.legend()
-    plt.show(block=True)
-
     fig.savefig('plot.png')
+    plt.show(block=True)

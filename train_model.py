@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
     net = DNN(device = 'cuda').build_model()
     optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=0.01)
-    epochs =10
+    epochs =200
 
     losses, test_losses = train_model.train(train_data=VLQData, net = net, optimizer=optimizer, epochs=epochs)
 

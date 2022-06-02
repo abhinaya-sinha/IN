@@ -8,6 +8,7 @@ import torch.optim as optim
 from DNN import DNN
 from data import CSVData
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import normalize
 
 class train_model:
     def Loss(y, y_pred):
@@ -23,9 +24,9 @@ class train_model:
             for i, batch in enumerate(train_data.generate_data()):
                 X_0, Y_0 = batch
                 X, X_test, Y, Y_test = train_test_split(X_0, Y_0, test_size=0.33)
-                inputs = torch.Tensor(X)
+                inputs = torch.Tensor(normalize(X))
                 labels = torch.Tensor(Y)
-                test_inputs = torch.Tensor(X_test)
+                test_inputs = torch.Tensor(normalize(X_test))
                 test_labels = torch.Tensor(Y_test)
                 del X, Y, X_test, Y_test, X_0, Y_0
                 outputs =net(inputs)
@@ -81,11 +82,11 @@ if __name__ == "__main__":
 
     losses, test_losses = train_model.train(train_data=VLQData, net = net, optimizer=optimizer, epochs=epochs)
 
+    torch.save(net, 'first_model.pt')
+
     plt.plot(np.linspace(0, epochs, epochs), losses, label = 'train loss')
     plt.yscale('log')
     plt.plot(np.linspace(0,epochs, epochs), test_losses, label = 'test loss')
     plt.yscale('log')
     plt.legend()
-    plt.show()
-
-    torch.save(net, 'first_model.pt')
+    plt.show(block=True)

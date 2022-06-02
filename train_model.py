@@ -84,9 +84,13 @@ if __name__ == "__main__":
 
     torch.save(net, 'first_model.pt')
 
-    plt.plot(np.linspace(0, epochs, epochs), losses, label = 'train loss')
-    plt.yscale('log')
-    plt.plot(np.linspace(0,epochs, epochs), test_losses, label = 'test loss')
-    plt.yscale('log')
-    plt.legend()
+
+    fig = plt.figure()
+    ax = fig.add_subplot(1,1,1)
+    ax.plot(np.linspace(0, epochs, epochs), losses, label = 'train loss')
+    ax.plot(np.linspace(0,epochs, epochs), test_losses, label = 'test loss')
+    ax.yscale('log')
+    ax.legend()
     plt.show(block=True)
+
+    fig.savefig('plot.png')

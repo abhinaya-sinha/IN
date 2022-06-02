@@ -30,7 +30,7 @@ class train_model:
                 test_labels = torch.Tensor(Y_test)
                 del X, Y, X_test, Y_test, X_0, Y_0
                 outputs =net(inputs)
-                optimizer.zero_grad(set_to_none=True)
+                optimizer.zero_grad()
                 loss = train_model.Loss(labels, outputs)
                 loss.backward()
                 optimizer.step()
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     'Gtarget',]
     label = 'f_rwt'
 
-    VLQData = CSVData(batch_size=4096, features_name=features, labels_name=label, file_names=['./train_'+str(i)+'.csv' for i in range(0,10)])
+    VLQData = CSVData(batch_size=1024, features_name=features, labels_name=label, file_names=['./train_'+str(i)+'.csv' for i in range(0,10)])
 
     net = DNN(device = 'cuda').build_model()
     optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=0.01)

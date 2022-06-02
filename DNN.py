@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 class DNN(nn.Module):
-    def __init__(self, Layers=[25, 16, 4], activation = nn.LeakyReLU(), X_mean = 0, X_std = 1, device = 'cpu'):
+    def __init__(self, Layers=[25, 16], activation = nn.LeakyReLU(), X_mean = 0, X_std = 1, device = 'cpu'):
         super().__init__()
         self.Layers = Layers
         self.activation = activation
@@ -22,7 +22,7 @@ class DNN(nn.Module):
             net.add_module("Activation" + str(ii), self.activation)
         last_module = nn.Linear(self.Layers[-2], 1, True)
         net.add_module("Linear_last", last_module)
-        last_activation = nn.LeakyReLU()
+        last_activation = nn.ReLU()
         net.add_module("Activation_last", last_activation)
         return net 
     

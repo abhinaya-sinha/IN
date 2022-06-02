@@ -76,7 +76,7 @@ if __name__ == "__main__":
     VLQData = CSVData(batch_size=4096, features_name=features, labels_name=label, file_names=['./train_'+str(i)+'.csv' for i in range(0,10)])
 
     net = DNN(device = 'cuda').build_model()
-    optimizer = optim.Adam(net.parameters(), lr=0.1, weight_decay=0.001)
+    optimizer = optim.Adam(net.parameters(), lr=0.01, weight_decay=0.01)
     epochs =300
 
     losses, test_losses = train_model.train(train_data=VLQData, net = net, optimizer=optimizer, epochs=epochs)
